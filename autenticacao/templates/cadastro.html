@@ -7,7 +7,7 @@
 
 {% block 'body' %}
     <div class="box">
-        <form>
+        <form action="{% url 'cadastro' %}" method="POST">{% csrf_token %}
 
             <h1 class="titulo font-degrade borda-bottom-degrade">INSCREVA-SE</h1>
             <br>
@@ -21,7 +21,7 @@
             <input type="password" class="form-control input-cadastro" name="confirm-password">
             <br>
             <input type="submit" value="CADASTRAR" class="btn btn-success btn-lg">
-            <a href="#" class="btn btn-primary btn-lg">LOGIN</a> 
+            <a href="{% url 'login'%}" class="btn btn-primary btn-lg">LOGIN</a> 
         </form>
             
     </div>
