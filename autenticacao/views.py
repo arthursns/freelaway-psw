@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.contrib import auth
 
 def cadastro(request):
     if request.method == "GET":
@@ -23,7 +24,7 @@ def cadastro(request):
         user = User.objects.filter(username = username)
         
         if user.exists():
-            messages.add_message(request, constants.ERROR, 'Já existe um usário com esse username')
+            messages.add_message(request, constants.ERROR, 'Já existe este usuário')
             return redirect('/auth/cadastro')
 
         try:
@@ -39,4 +40,17 @@ def cadastro(request):
             return redirect('/auth/cadastro')
 
 def login(request):
-    return render(request, 'login.html')
+    if request.method == "GET":
+        return render(request, 'login.html')
+    elif request.method == "POST":
+        username = request.POST.get('username')
+        senha = request.POST.get('password')
+
+        usuario = auth.authenticate(username=username, password=senha)
+
+        if not usuario:
+            messages.add_message(request, constants.ERROR, 'Usuário ou senha inválidos')
+            return redirect('/auth/login')
+        else:
+            auth.login(request, usuario)
+            return redirect('/')
